@@ -1,0 +1,30 @@
+.ui-alert-box {
+	margin: 0px;
+	display: flex;
+	align-items: center;
+}
+
+.ui-alert-box .fa {
+	font-size: 2em;
+	padding-left: 5px;
+	flex-shrink: 0;
+}
+
+.ui-alert-box .text {
+	margin: 0px;
+	flex-grow: 1;
+}
+
+.ui-alert-box-summary {
+	margin-left: 20px;
+}
+
+.ui-alert-box-summary ul {
+	list-style: none;
+	padding-left: 0;
+}
+
+.ui-alert-box-buttons {
+	text-align: right
+}
+​

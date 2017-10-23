@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.dispatch.Dispatch">
+	<resultMap id="dispatchMap"
+		type="com.harvestcrude.model.dispatch.Dispatch">
+		<id property="dispatchId" column="id" />
+		<result property="date" column="date" />
+		<collection property="orders" columnPrefix="O_"
+			resultMap="com.harvestcrude.model.order.Order.orderMap"></collection>
+	</resultMap>
+</mapper>

@@ -8,9 +8,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-				<property name="driver" value="" />
-				<property name="url" value="" />
-				<property name="username" value="" />
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://localhost:3306/harvest_development" />
+				<property name="username" value="root" />
 				<property name="password" value="" />
 				<property name="poolMaximumActiveConnections" value="25" />
 			</dataSource>
@@ -18,6 +18,18 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	</environments>
 	
 	<mappers>
+		<!-- Model -->
+		<mapper resource="com/harvestcrude/persistence/model/mapper/destination/Destination.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/dispatch/Dispatch.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/LeasePlant.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/LeasePlantOperator.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/order/Order.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/order/OrderStatus.xml"/>
 	
+		<!-- DAO -->
+		<mapper resource="com/harvestcrude/services/destination/persistence/mybatis/DestinationDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/dispatch/persistence/mybatis/DispatchDAO.xml"/> 
+		<mapper resource="com/harvestcrude/services/lease/plant/persistence/mybatis/LeasePlantDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/security/user/persistence/mybatis/UserAccountDAO.xml"/>
 	</mappers>
 </configuration>

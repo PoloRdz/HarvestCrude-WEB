@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import com.harvestcrude.services.security.auth.UserAuthService;
+
 @ManagedBean
 @RequestScoped
 public class LoginController implements Serializable {
@@ -12,6 +14,8 @@ public class LoginController implements Serializable {
 	//TODO add logger
 	
 	public String login(){
-		return "/home";
+		UserAuthService service = new UserAuthService();
+		service.getUserAccount();
+		return "/private/dispatch/dispatch?faces-redirect=true&dispatch=1";
 	}
 }

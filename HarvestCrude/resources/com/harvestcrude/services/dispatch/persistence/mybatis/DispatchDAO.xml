@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="DispatchDAO">
+	<select id="getDispatchById" resultMap="com.harvestcrude.model.dispatch.Dispatch.dispatchMap">
+		SELECT D.id,
+			   D.date,
+			   O.order_number AS O_order_number,
+			   LP.lease_plant_number AS O_LP_lease_plant_number,
+			   LP.name AS O_LP_name,
+			   LP.short_name AS O_LP_short_name,
+			   LP.identifier AS O_LP_identifier,
+			   DE.destination_id AS O_DE_destination_id,
+			   DE.name AS O_DE_name,
+			   DE.short_name AS O_DE_short_name,
+			   DE.identifier AS O_DE_identifier,
+			   OS.order_status_id AS O_OS_order_status_id,
+			   OS.name AS O_OS_name,
+			   OS.identifier AS O_OS_identifier
+		FROM dispatches D
+		INNER JOIN orders O
+			ON O.dispatch_id = D.id
+		INNER JOIN lease_plants LP
+			ON LP.lease_plant_number = O.lease_plant_numer
+		INNER JOIN destinations DE
+			ON D.id = DE.destination_id
+		INNER JOIN order_statuses OS
+			ON OS.order_status_id = O.order_status_id
+		WHERE D.id = #{dispatch_id}
+	</select>
+</mapper>

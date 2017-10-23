@@ -16,7 +16,7 @@
     </h:head>
 
     <h:body styleClass="AquaBack">
-		<h:form>
+		<h:form id="main">
 	        <div class="Wid70 MarAuto">
 	            <div class="Wid70 MarAuto WidAutoOnMobile TexAlCenter">
 	
@@ -44,7 +44,8 @@
 	                        </div>
 	                        <div class="EmptyBox20"></div>
 	                        <div class="Container100">
-	                            <p:commandButton type="button" value="Sign In" styleClass="GreenButton" action="#{loginController.login}"/>
+	                            <p:commandButton value="Sign In" styleClass="GreenButton" action="#{loginController.login}"
+	                            	update="main"/>
 	                        </div>
 	
 	                        <div class="EmptyBox10"></div>

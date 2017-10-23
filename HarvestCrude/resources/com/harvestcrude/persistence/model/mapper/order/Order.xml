@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.order.Order">
+	<resultMap id="orderMap"
+		type="com.harvestcrude.model.order.Order">
+		<id property="orderNumber" column="order_number" />
+		<association property="leasePlant" columnPrefix="LP_"
+			resultMap="com.harvestcrude.model.lease.plant.LeasePlant.leasePlantMap"></association>
+		<association property="destination" columnPrefix="DE_"
+			resultMap="com.harvestcrude.model.destination.Destination.destinationMap"></association>
+		<association property="orderStatus" columnPrefix="OS_"
+			resultMap="com.harvestcrude.model.order.OrderStatus.orderStatusMap"></association>
+	</resultMap>
+</mapper>

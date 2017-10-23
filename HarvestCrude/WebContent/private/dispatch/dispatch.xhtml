@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layout/olympos-layout/template.xhtml">
+
+	<ui:define name="content">
+		<!-- Main Container -->
+		<div class="ui-g">
+			<div class="Card TexAlCenter ui-g-12">
+				<h1 class="BigTopic">
+					Dispatch
+					<h:outputText value="#{dispatchController.dispatch.date}">
+						<f:convertDateTime pattern="MM/dd/yyyy"></f:convertDateTime>
+					</h:outputText>
+				</h1>
+			</div>
+			<div class="EmptyBox10"></div>
+			<div class="Card ui-g">
+				<div class="ui-g-12 ui-lg-1">
+					<p:outputLabel for="dispatchDate" value="Dispatch date "></p:outputLabel>
+				</div>
+				<div class="ui-g-12 ui-lg-11">
+					<p:calendar id="dispatchDate" required="true" 
+						requiredMessage="Dispatch date is required"
+						value="#{dispatchController.dispatch.date}" />
+					<p:button icon="fa fa-plus" styleClass="White"
+						style="margin-left:5px">
+							
+					</p:button>
+					<p:button icon="fa fa-binoculars" styleClass="White"
+						style="margin-left:5px">
+							
+					</p:button>
+				</div>
+				<div class="ui-g-12">
+					<p:dataTable var="order" rows="10" paginator="true"
+						value="#{dispatchController.dispatch.orders}"
+						emptyMessage="No records to display">
+						<p:column headerText="Order Number">
+							<p:link outcome="/private/dispatch/dispatch">
+								<h:outputText value="#{order.orderNumber}" />
+								<f:param name="dispatch" value="1" />
+							</p:link>
+						</p:column>
+						<p:column headerText="Lease Number">
+							<h:outputText value="#{order.leasePlant.identifier}" />
+						</p:column>
+						<p:column headerText="Lease">
+							<h:outputText value="#{order.leasePlant.shortName}" />
+						</p:column>
+						<p:column headerText="Destination">
+							<h:outputText value="#{order.destination.shortName}" />
+						</p:column>
+					</p:dataTable>
+				</div>
+
+				<div class="EmptyBox10" />
+				<div class="Separator" />
+
+				<h:form>
+					<div class="ui-g-12">
+						<h2>Add orders</h2>
+					</div>
+					<div class="ui-g-12">
+						<h3>Order information</h3>
+					</div>
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Order Number" for="newOrderNumber" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:inputText value="#{dispatchController.newOrder.orderNumber}"
+							id="newOrderNumber" required="true"
+							requiredMessage="Order Number is required">
+							<f:validateRegex pattern="\d*(.\d+)?"></f:validateRegex>
+						</p:inputText>
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Lease" for="lease" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:selectOneMenu id="lease" required="true" autoWidth="false"
+							requiredMessage="Lease plant is required" filter="true"
+							filterMatchMode="contains"
+							value="#{dispatchController.newOrder.leasePlant}">
+							<f:selectItem itemLabel="Select one option"
+								noSelectionOption="true" />
+							<f:selectItems value="#{dispatchController.leases}" var="lease"
+								itemLabel="#{lease.identifier} - #{lease.name}"
+								itemValue="#{lease}" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Destination" for="destination" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:selectOneMenu id="destination" required="true"
+							autoWidth="false" requiredMessage="Destination is required"
+							filter="true" filterMatchMode="contains"
+							value="#{dispatchController.newOrder.destination}">
+							<f:selectItem itemLabel="Select one option"
+								noSelectionOption="true" />
+							<f:selectItems value="#{dispatchController.destinations}"
+								var="dest" itemLabel="#{dest.name}" itemValue="#{dest}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="ui-g-12">
+						<p:commandButton icon="fa fa-plus" value="Add order" styleClass="White" 
+							disabled="#{dispatchController.dispatch.dispatchId == 0}"/>
+					</div>
+
+				</h:form>
+			</div>
+
+		</div>
+		<h:form>
+			<p:growl showDetail="true" life="5000" />
+		</h:form>
+	</ui:define>
+
+</ui:composition>

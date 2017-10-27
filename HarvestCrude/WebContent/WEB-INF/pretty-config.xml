@@ -18,5 +18,10 @@
 		<pattern value="/dispatch/#{dispatch}"/>
 		<view-id value="/private/dispatch/dispatch.xhtml"/>
 	</url-mapping>
+	
+	<url-mapping>
+		<pattern value="/search/dispatch"/>
+		<view-id value="/private/dispatch/search-dispatch.xhtml"/>
+	</url-mapping>
 
 </pretty-config>

@@ -20,6 +20,8 @@ import com.harvestcrude.services.ServiceException;
 import com.harvestcrude.services.destination.DestinationService;
 import com.harvestcrude.services.dispatch.DispatchService;
 import com.harvestcrude.services.lease.plant.LeasePlantService;
+import com.harvestcrude.services.order.ExistingOrderException;
+import com.harvestcrude.services.order.OrderService;
 
 @ManagedBean
 @ViewScoped
@@ -52,6 +54,19 @@ public class DispatchController implements Serializable {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid dispatch", "The requested dispatch is not available"));
 		} catch (ServiceException e) {
 			logger.error(e);
+			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
+		}
+	}
+	
+	public void insertOrder(){
+		OrderService orderService = new OrderService();
+		try {
+			orderService.insertOrder(dispatch, newOrder);
+			dispatch.getOrders().add(newOrder);
+			newOrder = new Order();
+		} catch (ExistingOrderException e){
+			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Warning", e.getMessage()));
+		} catch (ServiceException e) {
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
 		}
 	}

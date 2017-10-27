@@ -10,4 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		<collection property="orders" columnPrefix="O_"
 			resultMap="com.harvestcrude.model.order.Order.orderMap"></collection>
 	</resultMap>
+	
+	<resultMap id="dispatchDTOMap" 
+		type="com.harvestcrude.model.dispatch.DTO.DispatchDTO">
+		<id property="dispatchId" column="id" />
+		<result property="date" column="date" />
+		<result property="ordersAmount" column="orders_amount"/>
+	</resultMap>
 </mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OrderDAO">
+
+	<insert id="insertOrder">
+		INSERT INTO orders
+			(order_number, 
+			 lease_plant_numer, 
+			 destination_id, 
+			 dispatch_id, 
+			 order_status_id,
+			 created_by)
+		VALUES
+		(#{order_number},
+		 #{lease_plant_number},
+		 #{destination_id},
+		 #{dispatch_id},
+		 #{order_status_id},
+		 #{created_by})
+	</insert>
+	
+	<update id="updateOrder">
+		UPDATE orders
+		SET lease_plant_numer = #{lease_plant_number}, 
+			destination_id = #{destination_id}, 
+			dispatch_id = #{dispatch_id}, 
+			order_status_id = #{order_status_id}, 
+			modified_by = #{modified_by}, 
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE order_number = #{order_number}
+	</update>
+	
+	<select id="validateOrderNumber" resultType="int">
+		SELECT order_number
+		FROM orders O
+		WHERE O.order_number = #{order_number}
+	</select>
+
+</mapper>

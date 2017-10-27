@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="com/harvestcrude/services/destination/persistence/mybatis/DestinationDAO.xml"/>
 		<mapper resource="com/harvestcrude/services/dispatch/persistence/mybatis/DispatchDAO.xml"/> 
 		<mapper resource="com/harvestcrude/services/lease/plant/persistence/mybatis/LeasePlantDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/order/persistence/mybatis/OrderDAO.xml"/>
 		<mapper resource="com/harvestcrude/services/security/user/persistence/mybatis/UserAccountDAO.xml"/>
 	</mappers>
 </configuration>

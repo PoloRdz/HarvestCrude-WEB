@@ -6,60 +6,59 @@
 	template="/WEB-INF/layout/olympos-layout/template.xhtml">
 
 	<ui:define name="content">
-		<!-- Main Container -->
-		<div class="ui-g">
-			<div class="Card TexAlCenter ui-g-12">
-				<h1 class="BigTopic">
-					Dispatch
-					<h:outputText value="#{dispatchController.dispatch.date}">
-						<f:convertDateTime pattern="MM/dd/yyyy"></f:convertDateTime>
-					</h:outputText>
-				</h1>
-			</div>
-			<div class="EmptyBox10"></div>
-			<div class="Card ui-g">
-				<div class="ui-g-12 ui-lg-1">
-					<p:outputLabel for="dispatchDate" value="Dispatch date "></p:outputLabel>
+		<h:form>
+			<!-- Main Container -->
+			<div class="ui-g">
+				<div class="Card TexAlCenter ui-g-12">
+					<h1 class="BigTopic">
+						Dispatch
+						<h:outputText value="#{dispatchController.dispatch.date}">
+							<f:convertDateTime pattern="MM/dd/yyyy"></f:convertDateTime>
+						</h:outputText>
+					</h1>
 				</div>
-				<div class="ui-g-12 ui-lg-11">
-					<p:calendar id="dispatchDate" required="true" 
-						requiredMessage="Dispatch date is required"
-						value="#{dispatchController.dispatch.date}" />
-					<p:button icon="fa fa-plus" styleClass="White"
-						style="margin-left:5px">
-							
-					</p:button>
-					<p:button icon="fa fa-binoculars" styleClass="White"
-						style="margin-left:5px">
-							
-					</p:button>
-				</div>
-				<div class="ui-g-12">
-					<p:dataTable var="order" rows="10" paginator="true"
-						value="#{dispatchController.dispatch.orders}"
-						emptyMessage="No records to display">
-						<p:column headerText="Order Number">
-							<p:link outcome="/private/dispatch/dispatch">
-								<h:outputText value="#{order.orderNumber}" />
-								<f:param name="dispatch" value="1" />
-							</p:link>
-						</p:column>
-						<p:column headerText="Lease Number">
-							<h:outputText value="#{order.leasePlant.identifier}" />
-						</p:column>
-						<p:column headerText="Lease">
-							<h:outputText value="#{order.leasePlant.shortName}" />
-						</p:column>
-						<p:column headerText="Destination">
-							<h:outputText value="#{order.destination.shortName}" />
-						</p:column>
-					</p:dataTable>
-				</div>
+				<div class="EmptyBox10"></div>
+				<div class="Card ui-g">
+					<div class="ui-g-12 ui-lg-1">
+						<p:outputLabel for="dispatchDate" value="Dispatch date "></p:outputLabel>
+					</div>
+					<div class="ui-g-12 ui-lg-11">
+						<p:calendar id="dispatchDate" required="true"
+							requiredMessage="Dispatch date is required"
+							value="#{dispatchController.dispatch.date}" />
+						<p:button icon="fa fa-plus" styleClass="White"
+							style="margin-left:5px">
 
-				<div class="EmptyBox10" />
-				<div class="Separator" />
+						</p:button>
+						<p:button icon="fa fa-binoculars" styleClass="White"
+							style="margin-left:5px"
+							outcome="/private/dispatch/search-dispatch.xhtml" />
+					</div>
+					<div class="ui-g-12">
+						<p:dataTable var="order" rows="10" paginator="true"
+							value="#{dispatchController.dispatch.orders}"
+							emptyMessage="No records to display" id="ordersTable">
+							<p:column headerText="Order Number">
+								<p:link outcome="/private/dispatch/dispatch">
+									<h:outputText value="#{order.orderNumber}" />
+									<f:param name="dispatch" value="1" />
+								</p:link>
+							</p:column>
+							<p:column headerText="Lease Number">
+								<h:outputText value="#{order.leasePlant.identifier}" />
+							</p:column>
+							<p:column headerText="Lease">
+								<h:outputText value="#{order.leasePlant.shortName}" />
+							</p:column>
+							<p:column headerText="Destination">
+								<h:outputText value="#{order.destination.shortName}" />
+							</p:column>
+						</p:dataTable>
+					</div>
 
-				<h:form>
+					<div class="EmptyBox10" />
+					<div class="Separator" />
+
 					<div class="ui-g-12">
 						<h2>Add orders</h2>
 					</div>
@@ -82,6 +81,7 @@
 					</div>
 					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
 						<p:selectOneMenu id="lease" required="true" autoWidth="false"
+							converter="omnifaces.SelectItemsConverter"
 							requiredMessage="Lease plant is required" filter="true"
 							filterMatchMode="contains"
 							value="#{dispatchController.newOrder.leasePlant}">
@@ -98,8 +98,9 @@
 					</div>
 					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
 						<p:selectOneMenu id="destination" required="true"
-							autoWidth="false" requiredMessage="Destination is required"
-							filter="true" filterMatchMode="contains"
+							converter="omnifaces.SelectItemsConverter" autoWidth="false"
+							requiredMessage="Destination is required" filter="true"
+							filterMatchMode="contains"
 							value="#{dispatchController.newOrder.destination}">
 							<f:selectItem itemLabel="Select one option"
 								noSelectionOption="true" />
@@ -108,16 +109,16 @@
 						</p:selectOneMenu>
 					</div>
 					<div class="ui-g-12">
-						<p:commandButton icon="fa fa-plus" value="Add order" styleClass="White" 
-							disabled="#{dispatchController.dispatch.dispatchId == 0}"/>
+						<p:commandButton icon="fa fa-plus" value="Add order"
+							styleClass="White" action="#{dispatchController.insertOrder()}"
+							update="ordersTable, newOrderNumber, lease, destination, message"
+							disabled="#{dispatchController.dispatch.dispatchId == 0}" />
 					</div>
 
-				</h:form>
-			</div>
+				</div>
 
-		</div>
-		<h:form>
-			<p:growl showDetail="true" life="5000" />
+			</div>
+			<p:growl showDetail="true" life="5000" id="message"/>
 		</h:form>
 	</ui:define>
 

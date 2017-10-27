@@ -30,4 +30,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 			ON OS.order_status_id = O.order_status_id
 		WHERE D.id = #{dispatch_id}
 	</select>
+	
+	<select id="searchAllDispatch" resultMap="com.harvestcrude.model.dispatch.Dispatch.dispatchDTOMap">
+		SELECT id, 
+		       date,
+		       COUNT(O.order_number) AS orders_amount
+		FROM dispatches D 
+		INNER JOIN orders O
+		  ON O.dispatch_id = D.id
+		LIMIT #{first}, #{page_size}  
+	</select>
+	
+	<select id="searchAllDispatchCount" resultType="INTEGER">
+		SELECT COUNT(id)
+		FROM dispatches D
+	</select>
 </mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="TruckDAO">
+	<select id="selectDriverTruck" resultMap="com.harvestcrude.model.truck.Truck.truckMap">
+		SELECT 
+			TR.truck_number, 
+			TR.truck_identifier, 
+			CASE is_deleted
+				WHEN 1 THEN TRUE
+				ELSE FALSE END AS is_deleted
+		FROM driver_trucks DT
+		INNER JOIN trucks TR
+			ON DT.truck_number = TR.truck_number
+		WHERE DT.is_active = 1 AND DT.driver_id = #{driver_id}
+	</select>
+</mapper>

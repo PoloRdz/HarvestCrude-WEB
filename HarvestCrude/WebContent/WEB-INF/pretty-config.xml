@@ -14,14 +14,24 @@
 		<view-id value="/private/home.xhtml" />
 	</url-mapping>
 	
-	<url-mapping>
+	<url-mapping id="dispatch">
 		<pattern value="/dispatch/#{dispatch}"/>
 		<view-id value="/private/dispatch/dispatch.xhtml"/>
 	</url-mapping>
 	
-	<url-mapping>
+	<url-mapping id="search-dispatch">
 		<pattern value="/search/dispatch"/>
 		<view-id value="/private/dispatch/search-dispatch.xhtml"/>
+	</url-mapping>
+	
+	<url-mapping id="order">
+		<pattern value="/order/#{order}"/>
+		<view-id value="/private/order/order.xhtml"/>
+	</url-mapping>
+	
+	<url-mapping id="split-load">
+		<pattern value="/split-load/#{order}"/>
+		<view-id value="/private/order/split-load.xhtml"/>
 	</url-mapping>
 
 </pretty-config>

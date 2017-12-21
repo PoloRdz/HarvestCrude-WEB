@@ -1,0 +1,372 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layout/olympos-layout/template.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+			<div class="ui-g">
+				<div class="Card TexAlCenter ui-g-12">
+					<h1 class="BigTopic">Order</h1>
+				</div>
+			</div>
+			<div class="EmptyBox10"></div>
+			<div class="Card ui-g">
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel for="orderNumber" value="Order #" />
+				</div>
+				<div class="ui-g-12 ui-md-10 ui-lg-10">
+					<p:inputText id="orderNumber" disabled="true"
+						value="#{orderController.order.orderNumber}" />
+					<p:button icon="fa fa-angle-left" style="margin-left:5px"
+						styleClass="White" outcome="/private/order/order"
+						id="previousOrderNumber"
+						disabled="#{empty orderController.previousOrderNumber}">
+						<f:param name="order"
+							value="#{orderController.previousOrderNumber}" />
+					</p:button>
+					<p:tooltip for="previousOrderNumber"
+						value="Go to previous order number"
+						rendered="#{not empty orderController.previousOrderNumber}" />
+					<p:button icon="fa fa-angle-right" styleClass="White"
+						outcome="/private/order/order" id="nextOrderNumber"
+						disabled="#{empty orderController.nextOrderNumber}">
+						<f:param name="order" value="#{orderController.nextOrderNumber}" />
+					</p:button>
+					<p:tooltip for="nextOrderNumber" value="Go to next order number"
+						rendered="#{not empty orderController.nextOrderNumber}" />
+				</div>
+
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Lease" for="lease" />
+				</div>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+					<p:selectOneMenu id="lease" required="true" autoWidth="false"
+						converter="omnifaces.SelectItemsConverter"
+						requiredMessage="Lease plant is required" filter="true"
+						filterMatchMode="contains"
+						value="#{orderController.order.leasePlant}">
+						<f:selectItem itemLabel="Select one option"
+							noSelectionOption="true" />
+						<f:selectItems value="#{orderController.leases}" var="lease"
+							itemLabel="#{lease.identifier} - #{lease.name}"
+							itemValue="#{lease}" />
+						<p:ajax update="tankN" listener="#{orderController.selectLeasePlantTanks()}" event="change"></p:ajax>
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Destination" for="destination" />
+				</div>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+					<p:selectOneMenu id="destination" required="true"
+						converter="omnifaces.SelectItemsConverter" autoWidth="false"
+						requiredMessage="Destination is required" filter="true"
+						filterMatchMode="contains"
+						value="#{orderController.order.destination}">
+						<f:selectItem itemLabel="Select one option"
+							noSelectionOption="true" />
+						<f:selectItems value="#{orderController.destinations}" var="dest"
+							itemLabel="#{dest.name}" itemValue="#{dest}" />
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Status" for="status" />
+				</div>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+					<p:inputText value="#{orderController.order.orderStatus.name}"
+						id="status" disabled="true" />
+				</div>
+
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Driver" for="driver" />
+				</div>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+					<p:selectOneMenu id="driver" required="true"
+						converter="omnifaces.SelectItemsConverter" autoWidth="false"
+						requiredMessage="Driver is required" filter="true"
+						filterMatchMode="contains" value="#{orderController.order.driver}">
+						<f:selectItem itemLabel="Select one option"
+							noSelectionOption="true" />
+						<f:selectItems value="#{orderController.drivers}" var="driver"
+							itemLabel="#{driver.user.person.name} #{driver.user.person.lastName}"
+							itemValue="#{driver}" />
+						<p:ajax update="truckN" listener="#{orderController.selectDriverTruck()}" event="change"></p:ajax>
+					</p:selectOneMenu>
+				</div>
+
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Truck" for="truckN" />
+				</div>
+				<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+					<p:inputText id="truckN" disabled="true" required="true"
+						value="#{orderController.order.truck.identifier}" />
+				</div>
+				<div class="ui-g-12">
+					<p:splitButton value="Split load" disabled="false" styleClass="White">
+						<p:menuitem value="Remove" icon="fa fa-times" disabled="false"/>
+						<p:menuitem value="Open " icon="fa fa-external-link" disabled="false"/>
+					</p:splitButton>
+					<p:commandButton value="Cancel order" icon="fa fa-times"
+						styleClass="White" action="#{orderController.cancelOrder()}"
+						immediate="true" update="message, ticketPanel, status" />
+				</div>
+
+
+				<p:outputPanel id="ticketPanel"
+					rendered="#{!orderController.order.orderStatus.isCanceled}">
+
+					<div class="EmptyBox10" />
+					<div class="Separator" />
+
+					<div class="ui-g-12">
+						<h2>Ticket Information</h2>
+					</div>
+					
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Tank Number" for="tankN" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:selectOneMenu id="tankN" required="true"
+							converter="omnifaces.SelectItemsConverter" autoWidth="false"
+							requiredMessage="Tank Number is required" filter="true"
+							filterMatchMode="contains"
+							value="#{orderController.order.ticket.ticketData.tank}">
+							<f:selectItem itemLabel="Select one option"
+								noSelectionOption="true" />
+							<f:selectItems value="#{orderController.leasePlantTanks}"
+								var="tankN" itemLabel="#{tankN.name}" itemValue="#{tankN}" />
+						</p:selectOneMenu>
+					</div>
+					
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Ticket Type" for="ticketType" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:selectOneMenu id="ticketType" required="true"
+							converter="omnifaces.SelectItemsConverter" autoWidth="false"
+							requiredMessage="Ticket Type is required" filter="true"
+							filterMatchMode="contains"
+							value="#{orderController.order.ticket.ticketType}">
+							<f:selectItem itemLabel="Select one option"
+								noSelectionOption="true" />
+							<f:selectItems value="#{orderController.ticketTypes}"
+								var="ticketT" itemLabel="#{ticketT.name}" itemValue="#{ticketT}" />
+							<p:ajax update="mainTicketDataPanel" event="change"
+								immediate="true" />
+						</p:selectOneMenu>
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Ticket #" for="ticketN" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:inputNumber id="ticketN" required="true"
+							requiredMessage="Ticket # is required" thousandSeparator=""
+							decimalPlaces="0"
+							value="#{orderController.order.ticket.ticketNumber}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-2">
+						<p:outputLabel value="Barrels" for="netBarrels" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+						<p:inputNumber id="netBarrels" disabled="true"
+							value="#{orderController.order.ticket.ticketData.totalBarrels}"
+							decimalSeparator="." thousandSeparator="," decimalPlaces="2"
+							placeholder="0.0" />
+					</div>
+
+					<div class="ui-g-12 ui-md-1 ui-lg-1">
+						<p:outputLabel value="Grav" for="grav" />
+					</div>
+					<div class="ui-g-12 ui-md-3 ui-lg-3 ui-fluid">
+						<p:inputNumber id="grav" required="true"
+							value="#{orderController.order.ticket.ticketData.gravity}"
+							decimalPlaces="1" decimalSeparator="."
+							requiredMessage="Gravity is required" />
+					</div>
+
+					<div class="ui-g-12 ui-md-1 ui-lg-1">
+						<p:outputLabel value="Temp" for="temp" />
+					</div>
+					<div class="ui-g-12 ui-md-3 ui-lg-3 ui-fluid">
+						<p:inputNumber id="temp" required="true"
+							value="#{orderController.order.ticket.ticketData.temp}"
+							decimalPlaces="1" decimalSeparator="."
+							requiredMessage="Temperatur is required" />
+					</div>
+
+					<div class="ui-g-12 ui-md-1 ui-lg-1">
+						<p:outputLabel value="BSW" for="bsw" />
+					</div>
+					<div class="ui-g-12 ui-md-3 ui-lg-3 ui-fluid">
+						<p:inputNumber id="bsw" required="true"
+							value="#{orderController.order.ticket.ticketData.bsw}"
+							decimalPlaces="1" decimalSeparator="."
+							requiredMessage="BSW is required" />
+					</div>
+
+					<!-- TODO add ticket status to approach seal off/on required issue-->
+					<div class="ui-g-12 ui-md-2 ui-lg-1">
+						<p:outputLabel value="Seal Off" for="sealOff" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2 ui-fluid">
+						<p:inputText id="sealOff" required="true"
+							requiredMessage="Seal Off is required"
+							value="#{orderController.order.ticket.ticketData.sealOff}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-1">
+						<p:outputLabel value="Date" for="sealOffDate" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2 ui-fluid">
+						<p:calendar required="true" id="sealOffDate"
+							value="#{orderController.order.ticket.ticketData.sealOffDate}"
+							requiredMessage="Seal Off Date is required"
+							pattern="MM/dd/yyyy HH:mm:ss" />
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-1">
+						<p:outputLabel value="Seal On" for="sealOn" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2 ui-fluid">
+						<p:inputText id="sealOn" required="true"
+							requiredMessage="Seal On is required"
+							value="#{orderController.order.ticket.ticketData.sealOn}" />
+					</div>
+
+					<div class="ui-g-12 ui-md-2 ui-lg-1">
+						<p:outputLabel value="Date" for="sealOnDate" />
+					</div>
+					<div class="ui-g-12 ui-md-4 ui-lg-2 ui-fluid">
+						<p:calendar required="true" id="sealOnDate"
+							value="#{orderController.order.ticket.ticketData.sealOnDate}"
+							requiredMessage="Seal On Date is required"
+							pattern="MM/dd/yyyy HH:mm:ss" />
+					</div>
+
+					<p:outputPanel id="mainTicketDataPanel">
+						<p:outputPanel id="ticketMeterPanel" autoUpdate="true"
+							rendered="#{orderController.order.ticket.ticketType.isMeterRequired}">
+							<div class="ui-g-12 ui-md-2 ui-lg-2">
+								<p:outputLabel value="Meter Off" for="meterOff" />
+							</div>
+							<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+								<p:inputNumber id="meterOff" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketMeterData.meterOff}"
+									requiredMessage="Meter Off is required" decimalPlaces="2"
+									decimalSeparator="." />
+							</div>
+
+							<div class="ui-g-12 ui-md-2 ui-lg-2">
+								<p:outputLabel value="Meter On" for="meterOn" />
+							</div>
+							<div class="ui-g-12 ui-md-4 ui-lg-4 ui-fluid">
+								<p:inputNumber id="meterOn" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketMeterData.meterOn}"
+									requiredMessage="Meter On is required" decimalPlaces="2"
+									decimalSeparator="." />
+							</div>
+						</p:outputPanel>
+
+						<p:outputPanel id="ticketGaugePanel" autoUpdate="true"
+							rendered="#{orderController.order.ticket.ticketType.isGaugeRequired}">
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputLabel value="Open Gauge Top" />
+							</div>
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:inputNumber id="topGaugeFeet" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.highFeet}"
+									decimalPlaces="0"
+									requiredMessage="Open Gauge Top Feet is required" />
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="ft" for="topGaugeFeet" />
+							</div>
+
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:inputNumber id="topGaugeInch" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.highInches}"
+									decimalPlaces="0"
+									requiredMessage="Open Gauge Top Inches is required" />
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="ft" for="topGaugeInch" />
+							</div>
+
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:selectOneMenu required="true" id="topGaugeFrac"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.highFract}">
+									<f:selectItem itemValue="0" itemLabel="0" />
+									<f:selectItem itemValue="1" itemLabel="1" />
+									<f:selectItem itemValue="2" itemLabel="2" />
+									<f:selectItem itemValue="3" itemLabel="3" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="1/4" for="topGaugeFrac" />
+							</div>
+							<!-- Ends top gauge starts bottom gauge -->
+							<div class="ui-g-12 ui-md-3 ui-lg-3">
+								<p:outputLabel value="Open Gauge bottom" />
+							</div>
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:inputNumber id="bottomGaugeFeet" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.lowFeet}"
+									decimalPlaces="0" maxValue="50"
+									requiredMessage="Open Gauge Bottom Feet is required" />
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="ft" for="bottomGaugeFeet" />
+							</div>
+
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:inputNumber id="bottomGaugeInch" required="true"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.lowInches}"
+									decimalPlaces="0" maxValue="11" minValue="0"
+									requiredMessage="Open Gauge Bottom Inches is required" />
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="ft" for="bottomGaugeInch" />
+							</div>
+
+							<div class="ui-g-11 ui-md-2 ui-lg-2 ui-fluid">
+								<p:selectOneMenu required="true" id="bottomGaugeFrac"
+									value="#{orderController.order.ticket.ticketData.ticketGaugeData.lowFract}">
+									<f:selectItem itemValue="0" itemLabel="0" />
+									<f:selectItem itemValue="1" itemLabel="1" />
+									<f:selectItem itemValue="2" itemLabel="2" />
+									<f:selectItem itemValue="3" itemLabel="3" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-1 ui-md-1 ui-lg-1">
+								<p:outputLabel value="1/4" for="bottomGaugeFrac" />
+							</div>
+						</p:outputPanel>
+					</p:outputPanel>
+
+
+					<div class="ui-g-12 ui-fluid">
+						<p:inputTextarea
+							value="#{orderController.order.ticket.ticketData.comments}"
+							rows="3" />
+					</div>
+
+					<div class="ui-g-12">
+						<p:commandButton value="Save" icon="fa fa-save" styleClass="White"
+							action="#{orderController.saveOrder()}" update="@form"/>
+					</div>
+
+				</p:outputPanel>
+
+
+			</div>
+			<p:growl showDetail="true" life="5000" id="message" />
+		</h:form>
+	</ui:define>
+
+</ui:composition>

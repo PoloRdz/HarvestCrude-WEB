@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.harvestcrude.common.persistence.mybatis.DataAccessException;
 import com.harvestcrude.model.dispatch.Dispatch;
 import com.harvestcrude.model.dispatch.DTO.DispatchDTO;
+import com.harvestcrude.model.order.Order;
 
 public class DispatchDAO {
 	private static final Logger logger = Logger.getLogger(DispatchDAO.class);
@@ -53,6 +54,17 @@ public class DispatchDAO {
 		params.put("filter", filter);
 		try {
 			return getSession().selectOne("DispatchDAO.searchAllDispatchCount");
+		} catch (Exception e) {
+			logger.error(e);
+			throw new DataAccessException(e);
+		}
+	}
+	
+	public Dispatch getOrderCurrentDispatch(Order order) throws DataAccessException{
+		Map<String, Object> params = new HashMap<>();
+		params.put("order_number", order.getOrderNumber());
+		try{
+			return getSession().selectOne("DispatchDAO.getOrderCurrentDispatch", params);
 		} catch (Exception e) {
 			logger.error(e);
 			throw new DataAccessException(e);

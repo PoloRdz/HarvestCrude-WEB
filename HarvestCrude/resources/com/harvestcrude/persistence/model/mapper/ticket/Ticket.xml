@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.ticket.Ticket">
+	<resultMap id="ticketMap"
+		type="com.harvestcrude.model.ticket.Ticket">
+		<id property="ticketNumber" column="ticket_number" />
+		<association property="ticketType" columnPrefix="TT_"
+			resultMap="com.harvestcrude.model.ticket.TicketType.ticketTypeMap"/>
+		<association property="ticketData" columnPrefix="TD_"
+			resultMap="com.harvestcrude.model.ticket.TicketData.ticketDataMap"/>
+	</resultMap>
+</mapper>

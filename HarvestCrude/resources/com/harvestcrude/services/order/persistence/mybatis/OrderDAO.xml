@@ -7,26 +7,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 	<insert id="insertOrder">
 		INSERT INTO orders
 			(order_number, 
-			 lease_plant_numer, 
+			 lease_plant_number, 
 			 destination_id, 
 			 dispatch_id, 
 			 order_status_id,
 			 created_by)
 		VALUES
-		(#{order_number},
-		 #{lease_plant_number},
-		 #{destination_id},
-		 #{dispatch_id},
-		 #{order_status_id},
-		 #{created_by})
+			(#{order_number},
+			 #{lease_plant_number},
+			 #{destination_id},
+			 #{dispatch_id},
+			 #{order_status_id},
+			 #{created_by})
 	</insert>
 	
 	<update id="updateOrder">
 		UPDATE orders
-		SET lease_plant_numer = #{lease_plant_number}, 
-			destination_id = #{destination_id}, 
-			dispatch_id = #{dispatch_id}, 
-			order_status_id = #{order_status_id}, 
+		SET lease_plant_number = #{lease_plant_number}, 
+			destination_id = #{destination_id},
+			order_status_id = (SELECT order_status_id FROM order_statuses WHERE identifier = 'COMPLET'), 
 			modified_by = #{modified_by}, 
 			modified_date = CURRENT_TIMESTAMP()
 		WHERE order_number = #{order_number}
@@ -37,5 +36,339 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		FROM orders O
 		WHERE O.order_number = #{order_number}
 	</select>
-
+	
+	<select id="selectCompleteOrder" resultMap="com.harvestcrude.model.order.Order.orderMap">
+		SELECT 
+			O.order_number,
+			LP.lease_plant_number AS LP_lease_plant_number,
+			LP.name AS LP_name,
+			LP.short_name AS LP_short_name,
+			LP.identifier AS LP_identifier,
+			DE.destination_id AS DE_destination_id,
+			DE.name AS DE_name,
+			DE.short_name AS DE_short_name,
+			DE.identifier AS DE_identifier,
+			OS.order_status_id AS OS_order_status_id,
+			OS.name AS OS_name,
+			OS.identifier AS OS_identifier,
+			CASE OS.is_canceled
+				WHEN 1 THEN TRUE
+				ELSE FALSE END OS_is_canceled,
+			T.ticket_number AS T_ticket_number,
+			TT.ticket_type_id AS T_TT_ticket_type_id, 
+			TT.name AS T_TT_name, 
+			TT.identifier AS T_TT_identifier, 
+			CASE TT.is_meter_required 
+				WHEN 1 THEN true
+				ELSE false END AS T_TT_is_meter_required,
+			CASE TT.is_gauge_required 
+				WHEN 1 THEN true
+				ELSE false END AS T_TT_is_gauge_required,
+			CASE TT.is_reject_reason_required 
+				WHEN 1 THEN true
+				ELSE false END AS T_TT_is_reject_reason_required,
+			IFNULL(TD.total_barrels, 0) AS T_TD_total_barrels,  
+			TD.gravity AS T_TD_gravity, 
+			TD.temperature AS T_TD_temperature, 
+			TD.bsw AS T_TD_bsw, 
+			TD.seal_off AS T_TD_seal_off, 
+			TD.seal_off_date AS T_TD_seal_off_date, 
+			TD.seal_on AS T_TD_seal_on, 
+			TD.seal_on_date AS T_TD_seal_on_date, 
+			TD.comments AS T_TD_comments,
+			IFNULL(TMD.meter_off, 0) AS T_TD_TMD_meter_off, 
+			IFNULL(TMD.meter_on, 0) AS T_TD_TMD_meter_on,
+			IFNULL(TGD.high_temp, 0) AS T_TD_TGD_high_temp, 
+			IFNULL(TGD.high_ft, 0) AS T_TD_TGD_high_ft, 
+			IFNULL(TGD.hight_in, 0) AS T_TD_TGD_hight_in, 
+			IFNULL(TGD.high_fract, 0) AS T_TD_TGD_high_fract, 
+			IFNULL(TGD.low_temp, 0) AS T_TD_TGD_low_temp, 
+			IFNULL(TGD.low_ft, 0) AS T_TD_TGD_low_ft, 
+			IFNULL(TGD.low_in, 0) AS T_TD_TGD_low_in, 
+			IFNULL(TGD.low_fract, 0) AS T_TD_TGD_low_fract,
+			TA.tank_id AS T_TD_TA_tank_id, 
+			TA.name AS T_TD_TA_name,
+			TS.tank_size_id AS T_TD_TA_TS_tank_size_id, 
+			TS.tank_size AS T_TD_TA_TS_tank_size, 
+			TS.factor AS T_TD_TA_TS_factor,
+			U.id AS D_U_id, 
+			U.username AS D_U_username,
+			P.person_id AS D_U_P_person_id, 
+			P.name AS D_U_P_name, 
+			P.last_name AS D_U_P_last_name, 
+			P.identifier AS D_U_P_identifier,
+			TR.truck_number AS TR_truck_number, 
+			TR.truck_identifier AS TR_truck_identifier
+		FROM orders O
+		INNER JOIN lease_plants LP
+			ON LP.lease_plant_number = O.lease_plant_number
+		INNER JOIN destinations DE
+			ON O.destination_id = DE.destination_id
+		INNER JOIN order_statuses OS
+			ON OS.order_status_id = O.order_status_id
+		LEFT JOIN tickets T
+		    ON O.order_number = T.order_number
+		LEFT JOIN ticket_types TT
+		    ON T.ticket_type_id = TT.ticket_type_id
+		LEFT JOIN tickets_data TD
+		    ON TD.ticket_number = T.ticket_number
+		LEFT JOIN tickets_meter_data TMD
+		    ON TMD.ticket_number = TD.ticket_number
+		LEFT JOIN tickets_gauge_data TGD
+		    ON TGD.ticket_number = TD.ticket_number
+		LEFT JOIN tanks TA
+		    ON TD.tank_id = TA.tank_id
+		LEFT JOIN tank_sizes TS
+		    ON TA.tank_size_id = TS.tank_size_id
+		LEFT JOIN orders_drivers OD
+		    ON O.order_number = OD.order_number
+		LEFT JOIN users U
+		    ON U.id = OD.driver_user_id
+		LEFT JOIN users_people UP
+		    ON U.id = UP.user_id
+		LEFT JOIN people P
+		    ON P.person_id = UP.person_id
+		LEFT JOIN trucks TR
+		    ON TR.truck_number = OD.truck_number
+		WHERE O.order_number = #{order_number}
+	</select>
+	
+	<select id="getPreviousOrderNumber" resultType="INTEGER">
+		SELECT MIN(order_number) FROM orders WHERE order_number &lt; #{order_number} AND dispatch_id = #{dispatch_id}
+	</select>
+	
+	<select id="getNextOrderNumber" resultType="INTEGER">
+		SELECT MIN(order_number) FROM orders WHERE order_number &gt; #{order_number} AND dispatch_id = #{dispatch_id}
+	</select>
+	
+	<update id="cancelOrder">
+		UPDATE orders SET
+			order_status_id = (SELECT order_status_id FROM order_statuses WHERE identifier = 'CANCEL')
+		WHERE order_number = #{order_number}
+	</update>
+	
+	<insert id="insertOrderDriver">
+		INSERT INTO orders_drivers (
+			order_number, 
+			driver_user_id, 
+			truck_number, 
+			created_by)
+		VALUES (
+			#{order_number}, 
+			#{driver_user_id}, 
+			#{truck_number}, 
+			#{created_by})
+	</insert>
+	
+	<update id="updateOrderDriver">
+		UPDATE orders_drivers SET  
+			driver_user_id = #{driver_user_id},
+			truck_number = #{truck_number},
+			modified_by = #{modified_by},
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE order_number = #{order_number}
+	</update>
+	
+	<insert id="insertTicket">
+		INSERT INTO tickets(
+			ticket_number,
+			order_number,
+			ticket_type_id,
+			created_by)
+		VALUES (
+			#{ticket_number},
+			#{order_number},
+			#{ticket_type_id},
+			#{created_by})
+	</insert>
+	
+	<update id="updateTicket">
+		UPDATE tickets SET
+			ticket_type_id = #{ticket_type_id},
+			modified_by = #{modified_by},
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE ticket_number = #{ticket_number} AND order_number = #{order_number}
+	</update>
+	
+	<insert id="insertTicketData">
+		INSERT INTO tickets_data (
+			ticket_number, 
+			tank_id, 
+			total_barrels, 
+			gravity, 
+			temperature, 
+			bsw, 
+			seal_off, 
+			seal_off_date, 
+			seal_on, 
+			seal_on_date, 
+			comments, 
+			created_by)
+		VALUES (
+			#{ticket_number}, 
+			#{tank_id}, 
+			#{total_barrels}, 
+			#{gravity}, 
+			#{temperature}, 
+			#{bsw}, 
+			#{seal_off}, 
+			#{seal_off_date}, 
+			#{seal_on}, 
+			#{seal_on_date}, 
+			#{comments}, 
+			#{created_by})
+	</insert>
+	
+	<update id="updateTicketData">
+		UPDATE tickets_data SET
+			tank_id = #{tank_id}, 
+			total_barrels = #{total_barrels}, 
+			gravity = #{gravity}, 
+			temperature = #{temperature}, 
+			bsw = #{bsw}, 
+			seal_off = #{seal_off}, 
+			seal_off_date = #{seal_off_date}, 
+			seal_on = #{seal_on}, 
+			seal_on_date = #{seal_on_date}, 
+			comments = #{comments},  
+			modified_by = #{modified_by},
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE ticket_number = #{ticket_number}
+	</update>
+	
+	<insert id="insertTicketMeterData">
+		INSERT INTO tickets_meter_data ( 
+			ticket_number, 
+			meter_off, 
+			meter_on, 
+			created_by)
+		VALUES (
+			#{ticket_number}, 
+			#{meter_off}, 
+			#{meter_on}, 
+			#{created_by})		
+	</insert>
+	
+	<update id="updateTicketMeterData">
+		UPDATE tickets_meter_data SET
+			meter_off = #{meter_off}, 
+			meter_on = #{meter_on}, 
+			modified_by = #{modified_by},
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE ticket_number = #{ticket_number}
+	</update>
+	
+	<insert id="insertTicketGaugeData">
+		INSERT INTO tickets_gauge_data (
+			ticket_number, 
+			high_temp, 
+			high_ft, 
+			hight_in, 
+			high_fract, 
+			low_temp, 
+			low_ft, 
+			low_in, 
+			low_fract, 
+			created_by)
+		VALUES ( 
+			#{ticket_number}, 
+			#{high_temp}, 
+			#{high_ft}, 
+			#{hight_in}, 
+			#{high_fract}, 
+			#{low_temp}, 
+			#{low_ft}, 
+			#{low_in}, 
+			#{low_fract}, 
+			#{created_by})
+	</insert>
+	
+	<update id="updateTicketGaugeData">
+		UPDATE tickets_gauge_data SET
+			high_temp = #{high_temp}, 
+			high_ft = #{high_ft}, 
+			hight_in = #{hight_in}, 
+			high_fract = #{high_fract}, 
+			low_temp = #{low_temp}, 
+			low_ft = #{low_ft}, 
+			low_in = #{low_in}, 
+			low_fract = #{low_fract},
+			modified_by = #{modified_by},
+			modified_date = CURRENT_TIMESTAMP()
+		WHERE ticket_number = #{ticket_number}
+	</update>
+	
+	<insert id="insertSplitLoads">
+		INSERT INTO split_loads
+			(primary_split_load_order_number, secondary_split_load_order_number, created_by)
+		SELECT #{primary_split_load}, #{secondary_split_load}, #{created_by} FROM dual
+		WHERE NOT (
+		  #{primary_split_load} IN (SELECT primary_split_load_order_number FROM split_loads)
+		  OR #{primary_split_load} IN (SELECT secondary_split_load_order_number FROM split_loads)
+		  OR #{secondary_split_load} IN (SELECT primary_split_load_order_number FROM split_loads)
+		  OR #{secondary_split_load} IN (SELECT secondary_split_load_order_number FROM split_loads)
+		);
+	</insert>
+	
+	<select id="selectPrimaryOrderForSplitLoad" resultMap="com.harvestcrude.model.order.Order.orderDTOMap">
+		SELECT 
+			O.order_number, 
+			T.ticket_number, 
+			LP.name AS lease_plant_name, 
+			D.name AS destination_name
+		FROM orders O
+		INNER JOIN lease_plants LP
+			ON O.lease_plant_number = LP.lease_plant_number
+		INNER JOIN destinations D
+			ON O.destination_id = D.destination_id
+		LEFT JOIN tickets T
+			ON O.order_number = T.order_number
+		WHERE O.order_number = #{order_number} 
+	</select>
+	
+	<select id="selectOrdersForSplitLoad" resultMap="com.harvestcrude.model.order.Order.orderDTOMap">
+		SELECT 
+			O.order_number, 
+			T.ticket_number, 
+			LP.name AS lease_plant_name, 
+			D.name AS destination_name
+		FROM orders O
+		INNER JOIN lease_plants LP
+			ON O.lease_plant_number = LP.lease_plant_number
+		INNER JOIN destinations D
+			ON O.destination_id = D.destination_id
+		LEFT JOIN tickets T
+			ON O.order_number = T.order_number
+		WHERE O.order_number &lt;&gt; #{order_number}
+			AND O.dispatch_id = #{dispatch_id}
+			AND NOT EXISTS (SELECT * from split_loads SL WHERE SL.primary_split_load_order_number = O.order_number OR SL.secondary_split_load_order_number = O.order_number)
+			AND O.order_status_id &lt;&gt; (SELECT OS.order_status_id FROM order_statuses OS WHERE OS.is_canceled = TRUE)
+		<if test="filter != null">
+			AND (O.order_number = #{filter, jdbcType=INTEGER}
+				OR LP.name LIKE #{filter, jdbcType=VARCHAR}
+				OR D.name LIKE #{filter, jdbcType=VARCHAR})
+		</if>
+		LIMIT #{first}, #{page_size}					
+	</select>
+	
+	<select id="selectOrdersForSplitLoadCount" resultType="INTEGER">
+		SELECT 
+			COUNT(*)
+		FROM orders O
+		INNER JOIN lease_plants LP
+			ON O.lease_plant_number = LP.lease_plant_number
+		INNER JOIN destinations D
+			ON O.destination_id = D.destination_id
+		LEFT JOIN tickets T
+			ON O.order_number = T.order_number
+		WHERE O.order_number &lt;&gt; #{order_number}
+			AND O.dispatch_id = #{dispatch_id}
+			AND NOT EXISTS (SELECT * from split_loads SL WHERE SL.primary_split_load_order_number = O.order_number OR SL.secondary_split_load_order_number = O.order_number)
+			AND O.order_status_id &lt;&gt; (SELECT OS.order_status_id FROM order_statuses OS WHERE OS.is_canceled = TRUE)
+		<if test="filter != null">
+			AND (O.order_number = #{filter, jdbcType=INTEGER}
+				OR LP.name LIKE #{filter, jdbcType=VARCHAR}
+				OR D.name LIKE #{filter, jdbcType=VARCHAR})
+		</if>				
+	</select>
 </mapper>

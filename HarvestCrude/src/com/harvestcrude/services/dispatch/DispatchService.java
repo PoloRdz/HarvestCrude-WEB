@@ -10,6 +10,7 @@ import com.harvestcrude.common.persistence.mybatis.DataAccessException;
 import com.harvestcrude.common.persistence.mybatis.MyBatisConnectionFactory;
 import com.harvestcrude.model.dispatch.Dispatch;
 import com.harvestcrude.model.dispatch.DTO.DispatchDTO;
+import com.harvestcrude.model.order.Order;
 import com.harvestcrude.services.ServiceException;
 import com.harvestcrude.services.dispatch.persistence.mybatis.DispatchDAO;
 
@@ -60,6 +61,23 @@ public class DispatchService {
 		} catch (IOException | DataAccessException e) {
 			logger.error(e);
 			throw new ServiceException("Failed to load data", e);
+		} finally{
+			if(session != null){
+				session.close();
+			}
+		}
+	}
+	
+	public Dispatch getOrderCurrentDispatch(Order order) throws ServiceException{
+		SqlSession session = null;
+		DispatchDAO dispatchDAO = null;
+		try{
+			session = MyBatisConnectionFactory.getSqlSessionFactory().openSession();
+			dispatchDAO = new DispatchDAO(session);
+			return dispatchDAO.getOrderCurrentDispatch(order);
+		} catch(IOException | DataAccessException e){
+			logger.error(e);
+			throw new ServiceException("Failed to load order's dispatch");
 		} finally{
 			if(session != null){
 				session.close();

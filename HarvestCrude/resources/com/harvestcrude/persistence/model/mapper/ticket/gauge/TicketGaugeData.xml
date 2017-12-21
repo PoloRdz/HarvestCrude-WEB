@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.ticket.gauge.TicketGaugeData">
+	<resultMap id="ticketGaugeDataMap"
+		type="com.harvestcrude.model.ticket.gauge.TicketGaugeData">
+		<result property="highTemp" column="name"/>
+		<result property="highFeet" column="identifier"/>
+		<result property="highInches" column="name"/>
+		<result property="highFract" column="identifier"/>
+		<result property="lowTemp" column="name"/>
+		<result property="lowFeet" column="identifier"/>
+		<result property="lowInches" column="name"/>
+		<result property="lowFract" column="identifier"/>
+	</resultMap>
+</mapper>

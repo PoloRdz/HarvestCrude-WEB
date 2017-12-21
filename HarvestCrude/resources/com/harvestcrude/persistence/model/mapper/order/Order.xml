@@ -7,10 +7,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		type="com.harvestcrude.model.order.Order">
 		<id property="orderNumber" column="order_number" />
 		<association property="leasePlant" columnPrefix="LP_"
-			resultMap="com.harvestcrude.model.lease.plant.LeasePlant.leasePlantMap"></association>
+			resultMap="com.harvestcrude.model.lease.plant.LeasePlant.leasePlantMap"/>
 		<association property="destination" columnPrefix="DE_"
-			resultMap="com.harvestcrude.model.destination.Destination.destinationMap"></association>
+			resultMap="com.harvestcrude.model.destination.Destination.destinationMap"/>
 		<association property="orderStatus" columnPrefix="OS_"
-			resultMap="com.harvestcrude.model.order.OrderStatus.orderStatusMap"></association>
+			resultMap="com.harvestcrude.model.order.OrderStatus.orderStatusMap"/>
+		<association property="ticket" columnPrefix="T_"
+			resultMap="com.harvestcrude.model.ticket.Ticket.ticketMap"/>
+		<association property="driver" columnPrefix="D_"
+			resultMap="com.harvestcrude.model.driver.Driver.driverMap"/>
+		<association property="truck" columnPrefix="TR_"
+			resultMap="com.harvestcrude.model.truck.Truck.truckMap"/>
+	</resultMap>
+	
+	<resultMap id="orderDTOMap"
+		type="com.harvestcrude.model.order.DTO.OrderDTO" >
+		<result property="orderNumber" column="order_number"/>
+		<result property="ticketNumber" column="ticket_number"/>
+		<result property="leasePlant" column="lease_plant_name"/>
+		<result property="destination" column="destination_name"/>
 	</resultMap>
 </mapper>

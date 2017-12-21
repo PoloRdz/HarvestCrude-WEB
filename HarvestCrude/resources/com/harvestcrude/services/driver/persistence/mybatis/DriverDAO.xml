@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="DriverDAO">
+	<select id="getAllDrivers" resultMap="com.harvestcrude.model.driver.Driver.driverMap">
+		SELECT U.id AS U_id, 
+			   U.username AS U_username, 
+       		   true,
+               U.is_driver AS U_is_driver,
+		       P.person_id AS U_P_person_id, 
+		       P.name AS U_P_name, 
+		       P.last_name AS U_P_last_name, 
+		       P.identifier AS U_P_identifier
+		FROM users U
+		INNER JOIN users_people UP
+			ON U.id = UP.user_id
+		INNER JOIN people P
+			ON UP.person_id = P.person_id
+		WHERE U.is_driver = 1 
+	</select>
+</mapper>

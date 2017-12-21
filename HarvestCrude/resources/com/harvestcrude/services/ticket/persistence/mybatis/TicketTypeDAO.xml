@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TicketTypeDAO">
+
+	<select id="getAllTicketTypes" resultMap="com.harvestcrude.model.ticket.TicketType.ticketTypeMap">
+		SELECT ticket_type_id, 
+		       name, 
+		       identifier,
+		       CASE is_meter_required 
+		         	WHEN 1 THEN true
+		         	ELSE false END AS is_meter_required,
+		       CASE is_gauge_required 
+		         	WHEN 1 THEN true
+		         	ELSE false END AS is_gauge_required,
+		       CASE is_reject_reason_required 
+		         	WHEN 1 THEN true
+		         	ELSE false END AS is_reject_reason_required
+		FROM ticket_types
+	</select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OrderStatusDAO">
+
+	<select id="getAllOrderStatuses" resultMap="com.harvestcrude.model.order.OrderStatus.orderStatusMap">
+		SELECT order_status_id, 
+		       name, 
+		       identifier 
+		FROM order_statuses
+	</select>
+	
+	<select id="selectOrderStatus" resultMap="com.harvestcrude.model.order.OrderStatus.orderStatusMap">
+		SELECT 
+			OS.order_status_id, 
+			OS.name, 
+			OS.identifier, 
+			CASE OS.is_canceled
+				WHEN 1 THEN TRUE
+				ELSE FALSE END AS is_canceled
+		FROM orders O
+		INNER JOIN order_statuses OS
+			ON OS.order_status_id = O.order_status_id
+		WHERE O.order_number = #{order_number}
+	</select>
+
+</mapper>

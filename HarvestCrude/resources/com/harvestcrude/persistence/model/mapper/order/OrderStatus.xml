@@ -8,5 +8,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 		<id property="orderStatusId" column="order_status_id" />
 		<result property="name" column="name" />
 		<result property="identifier" column="identifier" />
+		<result property="isCanceled" column="is_canceled"/>
 	</resultMap>
 </mapper>

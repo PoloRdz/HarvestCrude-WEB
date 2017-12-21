@@ -20,7 +20,7 @@
 				<div class="EmptyBox10"></div>
 				<div class="Card ui-g">
 					<div class="ui-g-12 ui-lg-1">
-						<p:outputLabel for="dispatchDate" value="Dispatch date "></p:outputLabel>
+						<p:outputLabel for="dispatchDate" value="Dispatch date"/>
 					</div>
 					<div class="ui-g-12 ui-lg-11">
 						<p:calendar id="dispatchDate" required="true"
@@ -39,9 +39,9 @@
 							value="#{dispatchController.dispatch.orders}"
 							emptyMessage="No records to display" id="ordersTable">
 							<p:column headerText="Order Number">
-								<p:link outcome="/private/dispatch/dispatch">
+								<p:link outcome="/private/order/order">
 									<h:outputText value="#{order.orderNumber}" />
-									<f:param name="dispatch" value="1" />
+									<f:param name="order" value="#{order.orderNumber}" />
 								</p:link>
 							</p:column>
 							<p:column headerText="Lease Number">
@@ -63,7 +63,7 @@
 						<h2>Add orders</h2>
 					</div>
 					<div class="ui-g-12">
-						<h3>Order information</h3>
+						<h3>Order Information</h3>
 					</div>
 					<div class="ui-g-12 ui-md-2 ui-lg-2">
 						<p:outputLabel value="Order Number" for="newOrderNumber" />

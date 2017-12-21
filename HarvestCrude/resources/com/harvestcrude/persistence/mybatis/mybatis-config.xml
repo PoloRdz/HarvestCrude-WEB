@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 				<property name="driver" value="com.mysql.jdbc.Driver" />
 				<property name="url" value="jdbc:mysql://localhost:3306/harvest_development" />
 				<property name="username" value="root" />
-				<property name="password" value="" />
+				<property name="password" value="Amonos123" />
 				<property name="poolMaximumActiveConnections" value="25" />
 			</dataSource>
 		</environment>
@@ -21,16 +21,35 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<!-- Model -->
 		<mapper resource="com/harvestcrude/persistence/model/mapper/destination/Destination.xml"/>
 		<mapper resource="com/harvestcrude/persistence/model/mapper/dispatch/Dispatch.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/driver/Driver.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/tank/Tank.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/tank/TankSize.xml"/>
 		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/LeasePlant.xml"/>
 		<mapper resource="com/harvestcrude/persistence/model/mapper/lease/plant/LeasePlantOperator.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/mile/rate/MileRate.xml"/>
 		<mapper resource="com/harvestcrude/persistence/model/mapper/order/Order.xml"/>
 		<mapper resource="com/harvestcrude/persistence/model/mapper/order/OrderStatus.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/owner/operator/OwnerOperator.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/person/Person.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/ticket/gauge/TicketGaugeData.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/ticket/meter/TicketMeterData.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/ticket/Ticket.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/ticket/TicketData.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/ticket/TicketType.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/truck/Truck.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/user/User.xml"/>
+		<mapper resource="com/harvestcrude/persistence/model/mapper/user/UserStatus.xml"/>
 	
 		<!-- DAO -->
 		<mapper resource="com/harvestcrude/services/destination/persistence/mybatis/DestinationDAO.xml"/>
-		<mapper resource="com/harvestcrude/services/dispatch/persistence/mybatis/DispatchDAO.xml"/> 
+		<mapper resource="com/harvestcrude/services/dispatch/persistence/mybatis/DispatchDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/driver/persistence/mybatis/DriverDAO.xml"/> 
 		<mapper resource="com/harvestcrude/services/lease/plant/persistence/mybatis/LeasePlantDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/lease/plant/tank/persistence/mybatis/TankDAO.xml"/>
 		<mapper resource="com/harvestcrude/services/order/persistence/mybatis/OrderDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/order/persistence/mybatis/OrderStatusDAO.xml"/>
 		<mapper resource="com/harvestcrude/services/security/user/persistence/mybatis/UserAccountDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/ticket/persistence/mybatis/TicketTypeDAO.xml"/>
+		<mapper resource="com/harvestcrude/services/truck/persistence/mybatis/TruckDAO.xml"/>
 	</mappers>
 </configuration>

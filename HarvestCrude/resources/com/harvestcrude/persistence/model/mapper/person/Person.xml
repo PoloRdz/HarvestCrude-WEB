@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.person.Person">
+	<resultMap id="personMap"
+		type="com.harvestcrude.model.person.Person">
+		<id property="personId" column="person_id"/>
+		<result property="name" column="name"/>
+		<result property="lastName" column="last_name"/>
+		<result property="identifier" column="identifier"/>
+	</resultMap>
+</mapper>

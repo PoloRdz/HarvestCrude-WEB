@@ -51,7 +51,7 @@ public class DispatchController implements Serializable {
 			}
 		} catch(NumberFormatException e){
 			logger.error(e);
-			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid dispatch", "The requested dispatch is not available"));
+			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid dispatch", "The requested dispatch is not valid"));
 		} catch (ServiceException e) {
 			logger.error(e);
 			getFacesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));

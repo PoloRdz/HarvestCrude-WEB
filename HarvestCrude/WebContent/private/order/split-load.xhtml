@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layout/olympos-layout/template.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+			<div class="ui-g">
+				<div class="Card TexAlCenter ui-g-12">
+					<h1 class="BigTopic">Split load</h1>
+				</div>
+			</div>
+			<div class="EmptyBox10"></div>
+			<div class="Card ui-g">
+				<div class="ui-g-12 ui-md-2 ui-lg-2">
+					<p:outputLabel value="Search"></p:outputLabel>
+				</div>
+				<div class="ui-g-12 ui-md-10 ui-lg-10">
+					<p:inputText></p:inputText>
+				</div>
+				<div class="ui-g-12">
+					<p:dataTable lazy="true" id="orders" paginator="true"
+						var="order" selectionMode="single" rowKey="#{order.orderNumber}"
+						selection="#{splitLoadController.selectedOrder}"
+						value="#{splitLoadController.orders}"
+						rows="10" emptyMessage="No records to display">
+						<p:column headerText="Order Number">
+							<h:outputText value="#{order.orderNumber}"/>
+						</p:column>
+						<p:column headerText="Ticket Number">
+							<h:outputText value="#{order.ticketNumber}"/>
+						</p:column>
+						<p:column headerText="Lease">
+							<h:outputText value="#{order.leasePlant}"/>
+						</p:column>
+						<p:column headerText="Destination">
+							<h:outputText value="#{order.destination}"/>
+						</p:column>
+					</p:dataTable>
+				</div>
+			</div>
+			<p:growl showDetail="true" life="5000" id="message" />
+		</h:form>
+	</ui:define>
+
+</ui:composition>

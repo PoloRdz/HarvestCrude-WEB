@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.harvestcrude.model.ticket.TicketData">
+	<resultMap id="ticketDataMap"
+		type="com.harvestcrude.model.ticket.TicketData">
+		<result property="totalBarrels" column="total_barrels"/>
+		<result property="gravity" column="gravity"/>
+		<result property="temp" column="temperature"/>
+		<result property="bsw" column="bsw"/>
+		<result property="sealOff" column="seal_off"/>
+		<result property="sealOffDate" column="seal_off_date"/>
+		<result property="sealOn" column="seal_on"/>
+		<result property="sealOnDate" column="seal_on_date"/>
+		<result property="comments" column="comments"/>
+		<association property="ticketMeterData" columnPrefix="TMD_"
+			resultMap="com.harvestcrude.model.ticket.meter.TicketMeterData.ticketMeterDataMap"/>
+		<association property="ticketGaugeData" columnPrefix="TGD_"
+			resultMap="com.harvestcrude.model.ticket.gauge.TicketGaugeData.ticketGaugeDataMap"/>
+		<association property="tank" columnPrefix="TA_"
+			resultMap="com.harvestcrude.model.lease.plant.tank.Tank.tankMap"/>
+	</resultMap>
+</mapper>

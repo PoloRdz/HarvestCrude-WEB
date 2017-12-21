@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="TankDAO">
+	<select id="selectLeasePlantTanks" resultMap="com.harvestcrude.model.lease.plant.tank.Tank.tankMap">
+		SELECT
+			TA.tank_id, 
+			TA.name, 
+			TS.tank_size_id AS TS_tank_size_id, 
+			TS.tank_size AS TS_tank_size, 
+			TS.factor AS TS_factor
+		FROM tanks TA
+		INNER JOIN tank_sizes TS
+			ON TA.tank_size_id = TS.tank_size_id
+		WHERE TA.lease_plant_number = #{lease_plant_number}
+	</select>
+</mapper>

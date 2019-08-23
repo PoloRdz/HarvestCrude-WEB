@@ -134,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 	</select>
 	
 	<select id="getPreviousOrderNumber" resultType="INTEGER">
-		SELECT MIN(order_number) FROM orders WHERE order_number &lt; #{order_number} AND dispatch_id = #{dispatch_id}
+		SELECT MAX(order_number) FROM orders WHERE order_number &lt; #{order_number} AND dispatch_id = #{dispatch_id}
 	</select>
 	
 	<select id="getNextOrderNumber" resultType="INTEGER">

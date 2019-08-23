@@ -29,6 +29,11 @@
 		<view-id value="/private/order/order.xhtml"/>
 	</url-mapping>
 	
+	<url-mapping id="orders-upload">
+		<pattern value="/upload-orders"/>
+		<view-id value="/private/order/upload-orders.xhtml"/>
+	</url-mapping>
+		
 	<url-mapping id="split-load">
 		<pattern value="/split-load/#{order}"/>
 		<view-id value="/private/order/split-load.xhtml"/>

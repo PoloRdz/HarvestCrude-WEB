@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/layout/olympos-layout/template.xhtml">
+
+	<ui:define name="content">
+		<h:form enctype="multipart/form-data">
+			<div class="ui-g">
+				<div class="Card TexAlCenter ui-g-12">
+					<h1 class="BigTopic">Upload Orders</h1>
+				</div>
+			</div>
+			<div class="EmptyBox10"></div>
+			<div class="Card ui-g">
+			
+				<div class="ui-g-12 ui-md-12 ui-lg-12">
+					<p>Select or drag and drop a .CSV to upload</p>
+				</div>
+				<p:fileUpload mode="advanced" dragDropSupport="true" allowTypes="/(\.|\/)(csv)$/"/>
+
+			</div>
+			<p:growl showDetail="true" life="5000" id="message" />
+		</h:form>
+	</ui:define>
+
+</ui:composition>
